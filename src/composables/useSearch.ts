@@ -2,6 +2,7 @@ import { ref, computed, shallowRef } from 'vue'
 import FlexSearch from 'flexsearch'
 
 export interface SearchDoc {
+  type?: 'post' | 'knowledge'
   title: string
   slug: string
   url: string

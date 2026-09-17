@@ -118,9 +118,14 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
                 @mouseenter="activeIdx = i"
                 @click="go(r.url)"
               >
-                <div class="result-icon">📄</div>
+                <div class="result-icon">{{ r.type === 'knowledge' ? '📘' : '📄' }}</div>
                 <div class="result-body">
-                  <h4>{{ r.title }}</h4>
+                  <div class="result-header">
+                    <h4>{{ r.title }}</h4>
+                    <span class="result-type" :class="`type-${r.type || 'post'}`">
+                      {{ r.type === 'knowledge' ? '知识' : '文章' }}
+                    </span>
+                  </div>
                   <p>{{ r.summary }}</p>
                   <div class="result-meta">
                     <time>{{ r.date }}</time>
@@ -273,6 +278,27 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKeydown))
 
 .result-body { flex: 1; min-width: 0; }
 .result-body h4 { margin: 0 0 0.2rem; font-size: 0.95rem; color: #2c3e50; }
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.result-header h4 { margin: 0; }
+
+.result-type {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 500;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.type-post { background: #f1f5f9; color: #475569; }
+.type-knowledge { background: #dbeafe; color: #1e40af; }
 .result-body p {
   margin: 0 0 0.4rem;
   font-size: 0.82rem;
