@@ -2,8 +2,59 @@
 import ProgressBar from '@/components/ProgressBar.vue'
 import SearchBox from '@/components/SearchBox.vue'
 import { site } from '@/utils/site'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 const year = new Date().getFullYear()
+const route = useRoute()
+
+interface NavItem {
+  name: string
+  path?: string
+  children?: NavItem[]
+}
+
+const navItems: NavItem[] = [
+  { name: '首页', path: '/' },
+  { name: '知识', path: '/knowledge/' },
+  {
+    name: '系统',
+    children: [
+      { name: '思考', path: '/thinking/' },
+      { name: '执行', path: '/execution/' },
+      { name: '学习', path: '/learning/' },
+      { name: '训练', path: '/training/' },
+    ],
+  },
+  { name: '归档', path: '/archives/' },
+  { name: '分类', path: '/categories/' },
+  { name: '标签', path: '/tags/' },
+  { name: '小工具', path: '/demos/' },
+  { name: '关于', path: '/about/' },
+]
+
+const openIndex = ref<number | null>(null)
+const menuRef = ref<HTMLElement | null>(null)
+
+function toggle(idx: number) {
+  openIndex.value = openIndex.value === idx ? null : idx
+}
+function close() {
+  openIndex.value = null
+}
+
+function onClickOutside(e: MouseEvent) {
+  if (!menuRef.value) return
+  if (!menuRef.value.contains(e.target as Node)) close()
+}
+
+onMounted(() => document.addEventListener('click', onClickOutside))
+onUnmounted(() => document.removeEventListener('click', onClickOutside))
+
+// 路由变化关闭下拉
+function onNavClick() { close() }
+
+watch(() => route.path, () => { close() })
 </script>
 
 <template>
@@ -14,9 +65,24 @@ const year = new Date().getFullYear()
           <span class="brand-icon">{{ site.brandIcon }}</span>
           <span>{{ site.shortTitle }}</span>
         </RouterLink>
-        <ul class="matery-menu">
-          <li v-for="item in site.nav" :key="item.path">
-            <RouterLink :to="item.path" :exact-active-class="item.path === '/' ? 'router-link-active' : ''">
+        <ul ref="menuRef" class="matery-menu">
+          <li v-for="(item, i) in navItems" :key="i" :class="{ 'has-dropdown': item.children, open: openIndex === i }">
+            <template v-if="item.children">
+              <button class="menu-toggle" @click.stop="toggle(i)">
+                {{ item.name }}
+                <span class="caret">▾</span>
+              </button>
+              <ul v-show="openIndex === i" class="dropdown">
+                <li v-for="c in item.children" :key="c.path">
+                  <RouterLink :to="c.path!" @click="onNavClick">{{ c.name }}</RouterLink>
+                </li>
+              </ul>
+            </template>
+            <RouterLink
+              v-else
+              :to="item.path!"
+              :exact-active-class="item.path === '/' ? 'router-link-active' : ''"
+            >
               {{ item.name }}
             </RouterLink>
           </li>
@@ -138,6 +204,50 @@ const year = new Date().getFullYear()
   color: #ddd;
 }
 
+/* 下拉菜单 */
+.has-dropdown { position: relative; }
+.menu-toggle {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.menu-toggle:hover { color: var(--matery-primary); }
+.caret { font-size: 0.7em; opacity: 0.7; transition: transform 0.2s; }
+.has-dropdown.open .caret { transform: rotate(180deg); }
+.dropdown {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: -0.75rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem 0;
+  min-width: 120px;
+  z-index: 100;
+}
+.dropdown li { margin: 0; }
+.dropdown a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #475569;
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: background 0.15s, color 0.15s;
+}
+.dropdown a:hover {
+  background: #f1f5f9;
+  color: var(--matery-primary);
+}
+
 @media (max-width: 768px) {
   .matery-menu {
     gap: 0.8rem;
@@ -152,8 +262,6 @@ const year = new Date().getFullYear()
   .matery-brand {
     font-size: 1.15rem;
   }
+  .dropdown { left: 0; }
 }
 </style>
-
-
-
