@@ -6,6 +6,7 @@ import { join, dirname } from 'node:path'
 
 const ROOT = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')
 const POSTS_DIR = join(ROOT, 'src/content/posts')
+const KNOWLEDGE_DIR = join(ROOT, 'src/content/knowledge')
 const OUT = join(ROOT, 'public/search-data.json')
 
 function parseFrontMatter(raw) {
@@ -61,10 +62,34 @@ for (const file of walk(POSTS_DIR)) {
   const d = String(date.getDate()).padStart(2, '0')
   const plain = stripMarkdown(content)
   docs.push({
+    type: 'post',
     title: data.title || slug,
     slug,
     url: `/${y}/${m}/${d}/${slug}/`,
     date: date.toISOString().slice(0, 10),
+    tags: Array.isArray(data.tags) ? data.tags : data.tags ? [data.tags] : [],
+    description: (data.description || '').trim(),
+    summary: plain.substring(0, 160),
+    content: plain.substring(0, 4000),
+  })
+}
+
+// 知识库笔记(纳入搜索)
+for (const file of walk(KNOWLEDGE_DIR)) {
+  const raw = readFileSync(file, 'utf-8')
+  const { data, content } = parseFrontMatter(raw)
+  const parts = file.slice(KNOWLEDGE_DIR.length + 1).replace(/\\/g, '/').split('/')
+  if (parts.length < 3) continue
+  const domain = parts[parts.length - 3].toLowerCase()
+  const topic = parts[parts.length - 2].toLowerCase()
+  const slug = parts[parts.length - 1].replace(/\.md$/, '')
+  const plain = stripMarkdown(content)
+  docs.push({
+    type: 'knowledge',
+    title: data.title || slug,
+    slug,
+    url: `/knowledge/${domain}/${topic}/${slug}/`,
+    date: (data.updated || '').toString().slice(0, 10),
     tags: Array.isArray(data.tags) ? data.tags : data.tags ? [data.tags] : [],
     description: (data.description || '').trim(),
     summary: plain.substring(0, 160),

@@ -7,6 +7,7 @@ import { join } from 'node:path'
 
 const ROOT = new URL('../', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')
 const POSTS = join(ROOT, 'src/content/posts')
+const KNOWLEDGE = join(ROOT, 'src/content/knowledge')
 const DIST = join(ROOT, 'dist')
 const PUBLIC_DIR = join(ROOT, 'public')
 
@@ -84,6 +85,25 @@ const posts = walk(POSTS).map((p) => {
 
 console.log(`[rss] ${posts.length} posts found`)
 
+// 知识库笔记(仅用于 sitemap,不纳入 RSS Feed)
+const knowledgePages = []
+if (existsSync(KNOWLEDGE)) {
+  const seenDomains = new Set()
+  for (const file of walk(KNOWLEDGE)) {
+    const rel = file.slice(KNOWLEDGE.length + 1).replace(/\\/g, '/').split('/')
+    if (rel.length < 3) continue
+    const domain = rel[rel.length - 3].toLowerCase()
+    const topic = rel[rel.length - 2].toLowerCase()
+    const slug = rel[rel.length - 1].replace(/\.md$/, '')
+    if (!seenDomains.has(domain)) {
+      seenDomains.add(domain)
+      knowledgePages.push({ loc: `${SITE.link}/knowledge/${domain}/`, changefreq: 'weekly', priority: 0.8 })
+    }
+    knowledgePages.push({ loc: `${SITE.link}/knowledge/${domain}/${topic}/${slug}/`, changefreq: 'monthly', priority: 0.6 })
+  }
+}
+console.log(`[rss] ${knowledgePages.length} knowledge pages found`)
+
 const feed = new Feed({
   title: SITE.title,
   description: SITE.description,
@@ -125,6 +145,7 @@ const STATIC_PAGES = [
   { loc: '/about/', changefreq: 'monthly', priority: 0.5 },
   { loc: '/contact/', changefreq: 'monthly', priority: 0.5 },
   { loc: '/demos/', changefreq: 'monthly', priority: 0.5 },
+  { loc: '/knowledge/', changefreq: 'weekly', priority: 0.9 },
 ]
 
 const urls = [
@@ -139,6 +160,7 @@ const urls = [
     changefreq: 'monthly',
     priority: 0.7,
   })),
+  ...knowledgePages,
 ]
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
