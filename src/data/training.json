@@ -1,0 +1,15 @@
+{
+  "schema": "v1",
+  "plans": [
+    { "id": "morning-run", "title": "晨跑 5 公里", "category": "cardio", "target": "每周 3 次" }
+  ],
+  "logs": [
+    { "date": "2026-09-15", "planId": "morning-run", "duration": 32, "metric": 5.1 },
+    { "date": "2026-09-17", "planId": "morning-run", "duration": 30, "metric": 5.0 }
+  ],
+  "stats": {
+    "streak": 12,
+    "totalDays": 88,
+    "byCategory": { "cardio": 60, "strength": 28 }
+  }
+}
