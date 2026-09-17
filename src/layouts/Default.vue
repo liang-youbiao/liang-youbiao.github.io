@@ -35,12 +35,19 @@ const navItems: NavItem[] = [
 
 const openIndex = ref<number | null>(null)
 const menuRef = ref<HTMLElement | null>(null)
+const menuOpen = ref(false)
 
 function toggle(idx: number) {
   openIndex.value = openIndex.value === idx ? null : idx
 }
 function close() {
   openIndex.value = null
+}
+function toggleMenu() {
+  menuOpen.value = !menuOpen.value
+}
+function closeMenu() {
+  menuOpen.value = false
 }
 
 function onClickOutside(e: MouseEvent) {
@@ -52,9 +59,9 @@ onMounted(() => document.addEventListener('click', onClickOutside))
 onUnmounted(() => document.removeEventListener('click', onClickOutside))
 
 // 路由变化关闭下拉
-function onNavClick() { close() }
+function onNavClick() { close(); closeMenu() }
 
-watch(() => route.path, () => { close() })
+watch(() => route.path, () => { close(); closeMenu() })
 </script>
 
 <template>
@@ -65,7 +72,12 @@ watch(() => route.path, () => { close() })
           <span class="brand-icon">{{ site.brandIcon }}</span>
           <span>{{ site.shortTitle }}</span>
         </RouterLink>
-        <ul ref="menuRef" class="matery-menu">
+        <button class="hamburger" :aria-expanded="menuOpen" aria-label="菜单" @click.stop="toggleMenu">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+        <ul ref="menuRef" class="matery-menu" :class="{ 'is-open': menuOpen }">
           <li v-for="(item, i) in navItems" :key="i" :class="{ 'has-dropdown': item.children, open: openIndex === i }">
             <template v-if="item.children">
               <button class="menu-toggle" @click.stop="toggle(i)">
@@ -263,5 +275,72 @@ watch(() => route.path, () => { close() })
     font-size: 1.15rem;
   }
   .dropdown { left: 0; }
+}
+
+/* 汉堡按钮(默认隐藏) */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem 0.5rem;
+  flex-direction: column;
+  gap: 4px;
+  font-family: inherit;
+}
+.hamburger-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #2c3e50;
+  border-radius: 1px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.hamburger[aria-expanded="true"] .hamburger-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.hamburger[aria-expanded="true"] .hamburger-bar:nth-child(2) { opacity: 0; }
+.hamburger[aria-expanded="true"] .hamburger-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* 移动端:汉堡 + 抽屉 */
+@media (max-width: 768px) {
+  .hamburger { display: inline-flex; }
+
+  .matery-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.5rem 0;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border-top: 1px solid #e5e7eb;
+    overflow-x: visible;
+    white-space: normal;
+    z-index: 99;
+  }
+  .matery-menu.is-open { display: flex; }
+  .matery-menu > li {
+    width: 100%;
+    padding: 0.6rem 1.25rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .matery-menu > li:last-child { border-bottom: none; }
+  .matery-menu > li > a,
+  .matery-menu > li > .menu-toggle {
+    display: block;
+    width: 100%;
+  }
+  .has-dropdown .dropdown {
+    position: static;
+    box-shadow: none;
+    border: none;
+    background: #f8fafc;
+    margin: 0.5rem 0 0;
+    border-radius: 6px;
+    padding: 0.25rem 0;
+  }
 }
 </style>
