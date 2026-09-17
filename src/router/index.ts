@@ -47,6 +47,31 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/contact.vue'),
   },
   {
+    path: '/knowledge/',
+    name: 'knowledge',
+    component: () => import('@/pages/knowledge/index.vue'),
+  },
+  {
+    path: '/thinking/',
+    name: 'thinking',
+    component: () => import('@/pages/system/thinking.vue'),
+  },
+  {
+    path: '/execution/',
+    name: 'execution',
+    component: () => import('@/pages/system/execution.vue'),
+  },
+  {
+    path: '/learning/',
+    name: 'learning',
+    component: () => import('@/pages/system/learning.vue'),
+  },
+  {
+    path: '/training/',
+    name: 'training',
+    component: () => import('@/pages/system/training.vue'),
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/pages/404.vue'),
