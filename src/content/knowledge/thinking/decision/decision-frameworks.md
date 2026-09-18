@@ -5,7 +5,7 @@ topic: decision
 tags: [决策, 框架]
 difficulty: intermediate
 status: growing
-connections: []
+connections: [introduction-to-logic, thinking-biases, gtd-method]
 updated: 2026-09-17
 ---
 

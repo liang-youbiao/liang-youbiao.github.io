@@ -5,7 +5,7 @@ topic: state
 tags: [心流, 状态]
 difficulty: intermediate
 status: growing
-connections: []
+connections: [deep-work, energy-management, couch-to-5k]
 updated: 2026-09-17
 ---
 

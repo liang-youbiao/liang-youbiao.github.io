@@ -5,7 +5,7 @@ topic: methods
 tags: [学习方法, 记忆]
 difficulty: beginner
 status: growing
-connections: []
+connections: [introduction-to-logic, deep-work, note-taking-methods]
 updated: 2026-09-17
 ---
 

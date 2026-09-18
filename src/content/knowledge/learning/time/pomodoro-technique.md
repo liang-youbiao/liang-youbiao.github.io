@@ -5,7 +5,7 @@ topic: time
 tags: [时间管理, 番茄]
 difficulty: beginner
 status: mature
-connections: []
+connections: [deep-work, gtd-method]
 updated: 2026-09-17
 ---
 

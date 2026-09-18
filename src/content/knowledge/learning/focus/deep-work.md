@@ -5,7 +5,7 @@ topic: focus
 tags: [专注, 深度工作]
 difficulty: intermediate
 status: mature
-connections: []
+connections: [active-recall, pomodoro-technique, note-taking-methods, flow-state]
 updated: 2026-09-17
 ---
 

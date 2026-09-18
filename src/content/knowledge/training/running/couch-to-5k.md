@@ -5,7 +5,7 @@ topic: running
 tags: [跑步, 训练]
 difficulty: beginner
 status: growing
-connections: []
+connections: [basic-strength, flow-state]
 updated: 2026-09-17
 ---
 

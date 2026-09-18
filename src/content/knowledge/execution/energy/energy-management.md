@@ -5,7 +5,7 @@ topic: energy
 tags: [精力, 体能]
 difficulty: intermediate
 status: seedling
-connections: []
+connections: [gtd-method, flow-state, basic-strength]
 updated: 2026-09-17
 ---
 

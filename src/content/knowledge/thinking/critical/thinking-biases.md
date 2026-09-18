@@ -5,7 +5,7 @@ topic: critical
 tags: [认知偏差, 批判性思维]
 difficulty: intermediate
 status: growing
-connections: []
+connections: [introduction-to-logic, decision-frameworks, active-recall]
 updated: 2026-09-17
 ---
 

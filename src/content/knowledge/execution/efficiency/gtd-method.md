@@ -5,7 +5,7 @@ topic: efficiency
 tags: [效率, GTD]
 difficulty: intermediate
 status: mature
-connections: []
+connections: [decision-frameworks, pomodoro-technique, energy-management]
 updated: 2026-09-17
 ---
 

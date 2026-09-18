@@ -5,7 +5,7 @@ topic: logic
 tags: [逻辑, 思维]
 difficulty: beginner
 status: seedling
-connections: []
+connections: [decision-frameworks, active-recall]
 updated: 2026-09-17
 ---
 

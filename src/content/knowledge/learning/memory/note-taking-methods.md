@@ -5,7 +5,7 @@ topic: memory
 tags: [笔记法, 记忆]
 difficulty: beginner
 status: growing
-connections: []
+connections: [active-recall, deep-work]
 updated: 2026-09-17
 ---
 

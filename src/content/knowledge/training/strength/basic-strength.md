@@ -5,7 +5,7 @@ topic: strength
 tags: [力量, 训练]
 difficulty: beginner
 status: seedling
-connections: []
+connections: [couch-to-5k, energy-management]
 updated: 2026-09-17
 ---
 
