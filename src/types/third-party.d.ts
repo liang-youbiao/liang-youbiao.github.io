@@ -20,3 +20,23 @@ declare module 'd3-force-3d' {
   const d3: any
   export = d3
 }
+
+declare module 'three/examples/jsm/postprocessing/EffectComposer.js' {
+  const EffectComposer: any
+  export { EffectComposer }
+}
+
+declare module 'three/examples/jsm/postprocessing/RenderPass.js' {
+  const RenderPass: any
+  export { RenderPass }
+}
+
+declare module 'three/examples/jsm/postprocessing/UnrealBloomPass.js' {
+  const UnrealBloomPass: any
+  export { UnrealBloomPass }
+}
+
+declare module 'three/examples/jsm/postprocessing/OutputPass.js' {
+  const OutputPass: any
+  export { OutputPass }
+}

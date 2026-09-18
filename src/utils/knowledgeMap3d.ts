@@ -156,6 +156,7 @@ export function initScene(
 
   // 节点 mesh + label
   const nodeMeshes: any[] = []
+  let composer: any = null
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i]
     const color = new THREE.Color(node.color)
@@ -293,6 +294,7 @@ export function initScene(
     camera.aspect = w / h
     camera.updateProjectionMatrix()
     renderer.setSize(w, h)
+    composer?.setSize(w, h)
   }
 
   window.addEventListener('resize', onResize)
@@ -365,7 +367,8 @@ export function initScene(
       h.mesh.rotation.y += 0.001
     }
 
-    renderer.render(scene, camera)
+    if (composer) composer.render()
+    else renderer.render(scene, camera)
   }
   animate()
 
@@ -384,6 +387,25 @@ export function initScene(
     }
   })()
 
+  // Bloom 后期处理(异步初始化)
+  ;(async () => {
+    try {
+      const { EffectComposer } = await import('three/examples/jsm/postprocessing/EffectComposer.js')
+      const { RenderPass } = await import('three/examples/jsm/postprocessing/RenderPass.js')
+      const { UnrealBloomPass } = await import('three/examples/jsm/postprocessing/UnrealBloomPass.js')
+      const { OutputPass } = await import('three/examples/jsm/postprocessing/OutputPass.js')
+      composer = new EffectComposer(renderer)
+      composer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+      composer.setSize(W, H)
+      composer.addPass(new RenderPass(scene, camera))
+      const bloomPass = new UnrealBloomPass(new THREE.Vector2(W, H), 0.7, 0.45, 0.78)
+      composer.addPass(bloomPass)
+      composer.addPass(new OutputPass())
+    } catch (e) {
+      console.warn('[KnowledgeMap3D] Bloom init failed:', e)
+    }
+  })()
+
   // 清理
   return function dispose() {
     cancelAnimationFrame(animId)
@@ -391,6 +413,7 @@ export function initScene(
     renderer.domElement.removeEventListener('pointermove', onPointerMove)
     renderer.domElement.removeEventListener('click', onClick)
     controls.dispose()
+    composer?.dispose()
     scene.traverse((obj: any) => {
       if (obj.geometry) obj.geometry.dispose()
       if (obj.material) {
