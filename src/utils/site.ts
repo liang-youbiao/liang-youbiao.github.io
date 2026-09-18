@@ -38,10 +38,8 @@ export const site = {
     { name: '日历', path: '/calendar/' },
     { name: '分类', path: '/categories/' },
     { name: '标签', path: '/tags/' },
-    { name: '友链', path: '/friends/' },
     { name: '小工具', path: '/demos/' },
     { name: '关于', path: '/about/' },
-    { name: '留言', path: '/contact/' },
   ],
   socials: [
     { name: 'GitHub', url: 'https://github.com/liangyoubiao', icon: 'GitHub' },
