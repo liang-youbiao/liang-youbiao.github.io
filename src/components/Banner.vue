@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useTypedEffect } from '@/composables/useTyped'
 import { site } from '@/utils/site'
 
@@ -19,6 +20,14 @@ const props = withDefaults(defineProps<Props>(), {
   banners: () => site.banners,
   showAvatar: true,
 })
+
+// 过滤掉 GitHub 相关按钮与社交链接(产品策略)
+const safeBannerButtons = computed(() =>
+  (site.bannerButtons ?? []).filter((b) => !b.href.toLowerCase().includes('github')),
+)
+const safeSocials = computed(() =>
+  (site.socials ?? []).filter((s) => !s.url.toLowerCase().includes('github')),
+)
 
 const subList = Array.isArray(props.subtitle) ? props.subtitle : [props.subtitle || site.description]
 const { text, cursorVisible } = useTypedEffect(subList, {
@@ -77,8 +86,8 @@ function scrollDown(e: Event) {
         <div class="post-title center-align">{{ title }}</div>
       </div>
 
-      <div v-if="!postTitle" class="cover-btns">
-        <template v-for="btn in site.bannerButtons" :key="btn.href">
+      <div v-if="!postTitle && safeBannerButtons.length" class="cover-btns">
+        <template v-for="btn in safeBannerButtons" :key="btn.href">
           <a
             v-if="btn.href.startsWith('#')"
             :href="btn.href"
@@ -101,8 +110,8 @@ function scrollDown(e: Event) {
         </template>
       </div>
 
-      <div v-if="!postTitle" class="cover-social-link">
-        <a v-for="s in site.socials" :key="s.name" :href="s.url" target="_blank" rel="noopener" :title="s.name">
+      <div v-if="!postTitle && safeSocials.length" class="cover-social-link">
+        <a v-for="s in safeSocials" :key="s.name" :href="s.url" target="_blank" rel="noopener" :title="s.name">
           {{ s.icon }}
         </a>
       </div>
