@@ -10,6 +10,7 @@ interface Props {
   height?: 'index' | 'post'
   banners?: string[]
   showAvatar?: boolean
+  homepage?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: 'index',
   banners: () => site.banners,
   showAvatar: true,
+  homepage: false,
 })
 
 // 过滤掉 GitHub 相关按钮与社交链接(产品策略)
@@ -51,7 +53,7 @@ function scrollDown(e: Event) {
 
 <template>
   <header :class="['bg-cover', height === 'post' ? 'post-cover' : 'index-cover']">
-    <div v-if="!postTitle && banners?.length" class="bg-stack" aria-hidden="true">
+    <div v-if="!postTitle && props.homepage && banners?.length" class="bg-stack" aria-hidden="true">
       <div
         v-for="(src, i) in banners"
         :key="i"
@@ -86,7 +88,7 @@ function scrollDown(e: Event) {
         <div class="post-title center-align">{{ title }}</div>
       </div>
 
-      <div v-if="!postTitle && safeBannerButtons.length" class="cover-btns">
+      <div v-if="!postTitle && props.homepage && safeBannerButtons.length" class="cover-btns">
         <template v-for="btn in safeBannerButtons" :key="btn.href">
           <a
             v-if="btn.href.startsWith('#')"
@@ -110,14 +112,14 @@ function scrollDown(e: Event) {
         </template>
       </div>
 
-      <div v-if="!postTitle && safeSocials.length" class="cover-social-link">
+      <div v-if="!postTitle && props.homepage && safeSocials.length" class="cover-social-link">
         <a v-for="s in safeSocials" :key="s.name" :href="s.url" target="_blank" rel="noopener" :title="s.name">
           {{ s.icon }}
         </a>
       </div>
     </div>
 
-    <a v-if="!postTitle" href="#articles" class="scroll-down" @click="scrollDown" aria-label="向下滚动">
+    <a v-if="!postTitle && props.homepage" href="#articles" class="scroll-down" @click="scrollDown" aria-label="向下滚动">
       ⌄
     </a>
   </header>

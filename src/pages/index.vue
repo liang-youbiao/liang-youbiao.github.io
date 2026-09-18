@@ -26,7 +26,7 @@ const trainingData = getTrainingData()
 
 <template>
   <div class="home-page">
-    <Banner />
+    <Banner homepage />
 
     <Dream />
 
