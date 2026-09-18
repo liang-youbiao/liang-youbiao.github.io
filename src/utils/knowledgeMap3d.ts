@@ -185,31 +185,17 @@ export function initScene(
     mesh.add(label)
   }
 
-  // 连线:每条 link 独立 Line + CatmullRomCurve3 平滑样条(共享 LineDashedMaterial)
-  const linkMat = new THREE.LineDashedMaterial({
+  // 连线:LineSegments + LineBasicMaterial 实线(简洁干净)
+  const linkPositions = new Float32Array(links.length * 2 * 3)
+  const linkGeo = new THREE.BufferGeometry()
+  linkGeo.setAttribute('position', new THREE.BufferAttribute(linkPositions, 3))
+  const linkMat = new THREE.LineBasicMaterial({
     color: 0x94a3b8,
-    dashSize: 3,
-    gapSize: 1.5,
     transparent: true,
-    opacity: 0.75,
+    opacity: 0.5,
   })
-  const SAMPLE = 28
-  const linkLines: { line: any; curve: any; getStart: () => any; getEnd: () => any }[] = []
-  for (const link of links) {
-    const start = typeof link.source === 'object' ? link.source : nodes.find((n) => n.id === link.source)!
-    const end = typeof link.target === 'object' ? link.target : nodes.find((n) => n.id === link.target)!
-    const curve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(start.x || 0, start.y || 0, start.z || 0),
-      new THREE.Vector3(0, 0, 0), // 占位,animate 中更新
-      new THREE.Vector3(end.x || 0, end.y || 0, end.z || 0),
-    ], false, 'catmullrom', 0.5)
-    const pts = curve.getPoints(SAMPLE)
-    const geo = new THREE.BufferGeometry().setFromPoints(pts)
-    const line = new THREE.Line(geo, linkMat)
-    line.computeLineDistances()
-    scene.add(line)
-    linkLines.push({ line, curve, getStart: () => (typeof link.source === 'object' ? link.source : nodes.find((n) => n.id === link.source)!), getEnd: () => (typeof link.target === 'object' ? link.target : nodes.find((n) => n.id === link.target)!) })
-  }
+  const linkLines = new THREE.LineSegments(linkGeo, linkMat)
+  scene.add(linkLines)
 
   // 域色光晕(每域一个)
   const domainSet = new Set(nodes.map((n) => n.domain))
@@ -316,7 +302,6 @@ export function initScene(
 
   // 主循环
   let animId = 0
-  let dashOffset = 0
   const breathBase = performance.now() / 1000
   function animate() {
     animId = requestAnimationFrame(animate)
@@ -337,28 +322,23 @@ export function initScene(
       }
     }
 
-    // 连线流动(dashed offset)
-    dashOffset -= 0.018
-    linkMat.dashOffset = dashOffset
-
-    // 连线位置更新(CatmullRomCurve3 平滑样条:起点、中点向外偏移、终点)
-    for (let i = 0; i < linkLines.length; i++) {
-      const obj = linkLines[i]
-      const start = obj.getStart()
-      const end = obj.getEnd()
-      const sx = start.x || 0, sy = start.y || 0, sz = start.z || 0
-      const ex = end.x || 0, ey = end.y || 0, ez = end.z || 0
-      const mx = (sx + ex) / 2, my = (sy + ey) / 2, mz = (sz + ez) / 2
-      const len = Math.sqrt(mx * mx + my * my + mz * mz) || 1
-      const arc = 12
-      obj.curve.points[0].set(sx, sy, sz)
-      obj.curve.points[1].set(mx + (mx / len) * arc, my + (my / len) * arc, mz + (mz / len) * arc)
-      obj.curve.points[2].set(ex, ey, ez)
-      const newPts = obj.curve.getPoints(SAMPLE)
-      obj.line.geometry.setFromPoints(newPts)
-      obj.line.geometry.computeBoundingSphere()
-      obj.line.computeLineDistances()
+    // 连线位置更新(LineSegments 直线段 buffer)
+    const pos = linkGeo.attributes.position.array as Float32Array
+    for (let i = 0; i < links.length; i++) {
+      const link = links[i]
+      const source = typeof link.source === 'object' ? link.source : nodes.find((n) => n.id === link.source)
+      const target = typeof link.target === 'object' ? link.target : nodes.find((n) => n.id === link.target)
+      if (!source || !target) continue
+      const i3 = i * 6
+      pos[i3] = source.x || 0
+      pos[i3 + 1] = source.y || 0
+      pos[i3 + 2] = source.z || 0
+      pos[i3 + 3] = target.x || 0
+      pos[i3 + 4] = target.y || 0
+      pos[i3 + 5] = target.z || 0
     }
+    linkGeo.attributes.position.needsUpdate = true
+    linkGeo.computeBoundingSphere()
 
     // 星空缓慢旋转
     stars.rotation.y += 0.00008
@@ -411,7 +391,7 @@ export function initScene(
       composer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       composer.setSize(W, H)
       composer.addPass(new RenderPass(scene, camera))
-      const bloomPass = new UnrealBloomPass(new THREE.Vector2(W, H), 0.85, 0.6, 0.55)
+      const bloomPass = new UnrealBloomPass(new THREE.Vector2(W, H), 0.7, 0.55, 0.5)
       composer.addPass(bloomPass)
       composer.addPass(new OutputPass())
     } catch (e) {
