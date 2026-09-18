@@ -7,11 +7,6 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/index.vue'),
   },
   {
-    path: '/about/',
-    name: 'about',
-    component: () => import('@/pages/about.vue'),
-  },
-  {
     path: '/categories/',
     name: 'categories',
     component: () => import('@/pages/categories.vue'),
@@ -35,11 +30,6 @@ export const staticRoutes: RouteRecordRaw[] = [
     path: '/friends/',
     name: 'friends',
     component: () => import('@/pages/friends.vue'),
-  },
-  {
-    path: '/demos/',
-    name: 'demos',
-    component: () => import('@/pages/demos.vue'),
   },
   {
     path: '/contact/',
