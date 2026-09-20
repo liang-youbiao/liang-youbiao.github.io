@@ -41,11 +41,12 @@ declare module 'three/examples/jsm/postprocessing/OutputPass.js' {
   export default OutputPass
 }
 
-declare module 'live2d-widget' {
-  const L2Dwidget: any
-  export default L2Dwidget
+declare module 'pixi.js' {
+  const PIXI: any
+  export default PIXI
 }
-declare module 'live2d-widget/lib/css/live2d.css' {
-  const css: string
-  export default css
+
+declare module 'pixi-live2d-display' {
+  const Live2DModel: any
+  export { Live2DModel }
 }
