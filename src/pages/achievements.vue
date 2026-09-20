@@ -12,7 +12,7 @@ const visible = computed(() =>
 )
 function toggle() { expanded.value = !expanded.value }
 
-type Tab = 'achievements' | 'goals'
+type Tab = 'achievements' | 'stage' | 'challenge'
 const tab = ref<Tab>('achievements')
 
 const goals = getGoals()
@@ -40,7 +40,7 @@ function difficultyColor(d: number): string {
 
 <template>
   <div>
-    <Banner title="成就 & 目标" subtitle="记录让我有成就感的事 + 阶段性目标 + 挑战目标" height="post" />
+    <Banner title="成就 & 目标" subtitle="自我肯定 + 阶段性目标 + 挑战目标" height="post" />
 
     <article class="matery-container">
       <nav class="tab-bar" aria-label="成就/目标切换">
@@ -52,11 +52,18 @@ function difficultyColor(d: number): string {
           <span class="count">{{ all.length }}</span>
         </button>
         <button
-          :class="['tab', { active: tab === 'goals' }]"
-          @click="tab = 'goals'"
+          :class="['tab', { active: tab === 'stage' }]"
+          @click="tab = 'stage'"
         >
-          🎯 目标
-          <span class="count">{{ goals.stages.length + goals.challenges.length }}</span>
+          📅 阶段性目标
+          <span class="count">{{ goals.stages.length }}</span>
+        </button>
+        <button
+          :class="['tab', { active: tab === 'challenge' }]"
+          @click="tab = 'challenge'"
+        >
+          🔥 挑战目标
+          <span class="count">{{ goals.challenges.length }}</span>
         </button>
       </nav>
 
@@ -80,9 +87,8 @@ function difficultyColor(d: number): string {
         </div>
       </section>
 
-      <!-- 目标视图 -->
-      <section v-show="tab === 'goals'">
-        <h2 class="section-title">📅 阶段性目标(按年)</h2>
+      <!-- 阶段性目标视图 -->
+      <section v-show="tab === 'stage'">
         <div v-if="!goals.stages.length" class="empty">
           还没阶段性目标。去 <code>src/content/goals.md</code> 添加。
         </div>
@@ -108,8 +114,10 @@ function difficultyColor(d: number): string {
             </li>
           </ul>
         </div>
+      </section>
 
-        <h2 class="section-title">🔥 挑战目标(按难度)</h2>
+      <!-- 挑战目标视图 -->
+      <section v-show="tab === 'challenge'">
         <div v-if="!goals.challenges.length" class="empty">
           还没挑战目标。去 <code>src/content/goals.md</code> 添加。
         </div>
@@ -279,14 +287,6 @@ function difficultyColor(d: number): string {
 }
 
 /* 目标视图 */
-.section-title {
-  font-size: 1.05rem;
-  color: #475569;
-  margin: 1.75rem 0 0.75rem;
-  font-weight: 600;
-}
-.section-title:first-of-type { margin-top: 1rem; }
-
 .year-block {
   margin-bottom: 1.25rem;
   padding: 0.9rem 1.1rem;
