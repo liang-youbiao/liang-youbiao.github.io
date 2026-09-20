@@ -8,18 +8,21 @@ const ICONS: Record<string, string> = {
   learning: '📘',
   execution: '⚡',
   training: '💪',
+  mysystem: '⚙️',
 }
 const NAMES: Record<string, { cn: string; en: string; desc: string }> = {
   thinking: { cn: '思考', en: 'Thinking', desc: '逻辑、决策、批判性思维' },
   learning: { cn: '学习', en: 'Learning', desc: '方法、专注、记忆、时间管理' },
   execution: { cn: '执行', en: 'Execution', desc: '效率、状态、精力管理' },
   training: { cn: '训练', en: 'Training', desc: '身体训练方法与日志' },
+  mysystem: { cn: '成长系统', en: 'Growth System', desc: '元方法论、工具栈、系统迭代' },
 }
 const COLOR: Record<string, string> = {
   thinking: '#7c3aed',
   learning: '#2563eb',
   execution: '#0891b2',
   training: '#ea580c',
+  mysystem: '#16a34a',
 }
 </script>
 

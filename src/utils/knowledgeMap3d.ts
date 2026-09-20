@@ -8,6 +8,7 @@ const DOMAIN_COLORS: Record<string, string> = {
   learning: '#2563eb',
   execution: '#0891b2',
   training: '#ea580c',
+  mysystem: '#16a34a',
 }
 
 const DIFFICULTY_SIZE: Record<string, number> = {
