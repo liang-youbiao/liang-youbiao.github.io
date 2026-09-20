@@ -8,7 +8,7 @@ interface Props {
   height?: number
 }
 const props = withDefaults(defineProps<Props>(), {
-  modelPath: '/kanban/haru01/haru01.model.json',
+  modelPath: '/kanban/epsilon2.1/Epsilon2.1.model.json',
   position: 'right',
   width: 200,
   height: 400,
