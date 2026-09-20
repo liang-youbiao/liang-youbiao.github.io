@@ -12,14 +12,6 @@ const DOMAIN_NAMES: Record<string, string> = {
   training: '训练',
   mysystem: '成长系统',
 }
-
-const DOMAIN_ICONS: Record<string, string> = {
-  thinking: '🧠',
-  learning: '📘',
-  execution: '⚡',
-  training: '💪',
-  mysystem: '⚙️',
-}
 </script>
 
 <template>
@@ -32,7 +24,6 @@ const DOMAIN_ICONS: Record<string, string> = {
     <template v-if="domain">
       <span class="sep" aria-hidden="true">›</span>
       <RouterLink :to="`/knowledge/${domain}/`" class="crumb">
-        <span class="ico">{{ DOMAIN_ICONS[domain] || '📂' }}</span>
         <span class="lbl">{{ DOMAIN_NAMES[domain] || domain }}</span>
       </RouterLink>
     </template>
