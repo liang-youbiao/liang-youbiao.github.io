@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProgressBar from '@/components/ProgressBar.vue'
+import KanbanGirl from '@/components/KanbanGirl.vue'
 import { site } from '@/utils/site'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -87,6 +88,7 @@ watch(() => route.path, () => { closeMenu() })
     </footer>
 
     <ProgressBar />
+    <KanbanGirl />
   </div>
 </template>
 

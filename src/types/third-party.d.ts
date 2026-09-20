@@ -23,20 +23,29 @@ declare module 'd3-force-3d' {
 
 declare module 'three/examples/jsm/postprocessing/EffectComposer.js' {
   const EffectComposer: any
-  export { EffectComposer }
+  export default EffectComposer
 }
 
 declare module 'three/examples/jsm/postprocessing/RenderPass.js' {
   const RenderPass: any
-  export { RenderPass }
+  export default RenderPass
 }
 
 declare module 'three/examples/jsm/postprocessing/UnrealBloomPass.js' {
   const UnrealBloomPass: any
-  export { UnrealBloomPass }
+  export default UnrealBloomPass
 }
 
 declare module 'three/examples/jsm/postprocessing/OutputPass.js' {
   const OutputPass: any
-  export { OutputPass }
+  export default OutputPass
+}
+
+declare module 'live2d-widget' {
+  const L2Dwidget: any
+  export default L2Dwidget
+}
+declare module 'live2d-widget/lib/css/live2d.css' {
+  const css: string
+  export default css
 }

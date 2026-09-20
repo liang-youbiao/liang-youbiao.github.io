@@ -19,6 +19,7 @@
     "feed": "^6.0.0",
     "flexsearch": "^0.8.212",
     "gray-matter": "^4.0.3",
+    "live2d-widget": "^3.1.4",
     "markdown-it": "^15.0.0",
     "markdown-it-anchor": "^9.2.1",
     "shiki": "^4.4.3",
