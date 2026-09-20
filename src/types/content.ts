@@ -17,11 +17,11 @@ export interface KnowledgeNote extends KnowledgeNoteMeta {
   content: string
 }
 
-// 复盘 frontmatter(思考 / 执行 / 学习)
+// 复盘 frontmatter(思考 / 执行 / 学习 / 我的系统)
 export interface ReviewNoteMeta {
   title: string
   slug: string
-  type: 'thinking' | 'execution' | 'learning'
+  type: 'thinking' | 'execution' | 'learning' | 'mysystem'
   period?: string
   status?: 'seedling' | 'growing' | 'mature'
   updated?: string

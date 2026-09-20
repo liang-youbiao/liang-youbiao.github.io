@@ -42,6 +42,11 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/knowledge/index.vue'),
   },
   {
+    path: '/mysystem/',
+    name: 'mysystem',
+    component: () => import('@/pages/system/mysystem.vue'),
+  },
+  {
     path: '/thinking/',
     name: 'thinking',
     component: () => import('@/pages/system/thinking.vue'),
