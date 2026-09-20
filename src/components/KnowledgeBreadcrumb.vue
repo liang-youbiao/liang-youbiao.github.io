@@ -10,7 +10,7 @@ const DOMAIN_NAMES: Record<string, string> = {
   learning: '学习',
   execution: '执行',
   training: '训练',
-  mysystem: '我的系统',
+  mysystem: '成长系统',
 }
 
 const DOMAIN_ICONS: Record<string, string> = {

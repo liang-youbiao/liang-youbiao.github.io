@@ -17,7 +17,7 @@ export interface KnowledgeNote extends KnowledgeNoteMeta {
   content: string
 }
 
-// 复盘 frontmatter(思考 / 执行 / 学习 / 我的系统)
+// 复盘 frontmatter(思考 / 执行 / 学习 / 成长系统)
 export interface ReviewNoteMeta {
   title: string
   slug: string

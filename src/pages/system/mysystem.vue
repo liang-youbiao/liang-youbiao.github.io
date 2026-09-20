@@ -10,7 +10,7 @@ const reviews = getReviewsByType('mysystem')
 <template>
   <SystemShell
     domain="mysystem"
-    title="我的系统"
+    title="成长系统"
     subtitle="方法论 + 实战记录 —— 把系统本身当作一门手艺打磨"
     :knowledge-notes="notes"
     :reviews="reviews"

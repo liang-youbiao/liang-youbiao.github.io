@@ -10,7 +10,7 @@ const route = useRoute()
 const navItems = [
   { name: '首页', path: '/' },
   { name: '知识', path: '/knowledge/' },
-  { name: '我的系统', path: '/mysystem/' },
+  { name: '成长系统', path: '/mysystem/' },
   { name: '思考体系', path: '/thinking/' },
   { name: '执行体系', path: '/execution/' },
   { name: '学习体系', path: '/learning/' },
