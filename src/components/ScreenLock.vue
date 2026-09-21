@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, watch, onUnmounted } from 'vue'
+import { watch, onUnmounted } from 'vue'
 import { useScreenLock } from '../composables/useScreenLock'
 
 const { isLocked, unlock } = useScreenLock()
 
-const hint = ref('')
 let prevOverflow = ''
 
 let originalTitle = ''
@@ -48,8 +47,6 @@ watch(isLocked, (locked) => {
 
 function onLogoClick(e: MouseEvent) {
   e.preventDefault()
-  hint.value = '再点一次'
-  setTimeout(() => (hint.value = ''), 1500)
 }
 
 function onLogoDblClick(e: MouseEvent) {
@@ -81,8 +78,6 @@ onUnmounted(() => {
           <a href="https://twitter.com/githubstatus" target="_blank" rel="noopener noreferrer">@githubstatus</a>
         </div>
 
-        <p v-if="hint" class="screen-lock__hint">{{ hint }}</p>
-
         <a
           href="/"
           class="logo"
@@ -111,9 +106,9 @@ onUnmounted(() => {
 .container {
   width: 540px;
   max-width: calc(100vw - 40px);
-  margin: 0 20px 0 auto;
+  margin: 0 auto;
   padding: 70px 0 50px;
-  text-align: right;
+  text-align: center;
   position: relative;
   box-sizing: border-box;
 }
@@ -153,18 +148,11 @@ a:hover {
   color: #24292e;
 }
 
-.screen-lock__hint {
-  margin-top: 12px !important;
-  font-size: 13px;
-  color: #586069;
-  min-height: 18px;
-}
-
 .logo {
   display: block;
   width: 60px;
   height: 60px;
-  margin: 32px 0 0 auto;
+  margin: 32px auto 0;
   cursor: pointer;
   user-select: none;
   -webkit-user-drag: none;
