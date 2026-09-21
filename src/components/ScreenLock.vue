@@ -1,20 +1,48 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import { useScreenLock } from '../composables/useScreenLock'
-import logo1x from '../assets/screen-lock-logo-1x.png'
-import logo2x from '../assets/screen-lock-logo-2x.png'
 
 const { isLocked, unlock } = useScreenLock()
 
 const hint = ref('')
 let prevOverflow = ''
 
+let originalTitle = ''
+let faviconLinks: HTMLLinkElement[] = []
+let originalFaviconHrefs: string[] = []
+let originalsCaptured = false
+
+function captureOriginals() {
+  if (originalsCaptured) return
+  originalsCaptured = true
+  originalTitle = document.title
+  faviconLinks = Array.from(document.querySelectorAll<HTMLLinkElement>('link[rel*="icon"]'))
+  originalFaviconHrefs = faviconLinks.map(l => l.href)
+}
+
+function applyLockedChrome() {
+  captureOriginals()
+  document.title = 'Site not found · GitHub Pages'
+  faviconLinks.forEach(l => { l.href = '/screen-lock-logo.png' })
+}
+
+function restoreOriginalChrome() {
+  if (!originalsCaptured) return
+  document.title = originalTitle
+  faviconLinks.forEach((l, i) => {
+    const orig = originalFaviconHrefs[i]
+    if (orig !== undefined) l.href = orig
+  })
+}
+
 watch(isLocked, (locked) => {
   if (locked) {
     prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    applyLockedChrome()
   } else {
     document.body.style.overflow = prevOverflow
+    restoreOriginalChrome()
   }
 }, { immediate: true })
 
@@ -31,6 +59,7 @@ function onLogoDblClick(e: MouseEvent) {
 
 onUnmounted(() => {
   document.body.style.overflow = prevOverflow
+  restoreOriginalChrome()
 })
 </script>
 
@@ -54,11 +83,15 @@ onUnmounted(() => {
 
         <p v-if="hint" class="screen-lock__hint">{{ hint }}</p>
 
-        <a href="/" class="logo logo-img-1x" @click="onLogoClick" @dblclick="onLogoDblClick" draggable="false">
-          <img width="32" height="32" alt="" :src="logo1x" draggable="false" />
-        </a>
-        <a href="/" class="logo logo-img-2x" @click="onLogoClick" @dblclick="onLogoDblClick" draggable="false">
-          <img width="32" height="32" alt="" :src="logo2x" draggable="false" />
+        <a
+          href="/"
+          class="logo"
+          aria-label="logo"
+          @click="onLogoClick"
+          @dblclick="onLogoDblClick"
+          draggable="false"
+        >
+          <img width="60" height="60" alt="" src="/screen-lock-logo.png" draggable="false" />
         </a>
       </div>
     </div>
@@ -76,18 +109,20 @@ onUnmounted(() => {
 }
 
 .container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 70px 20px 50px;
-  text-align: center;
+  width: 540px;
+  max-width: calc(100vw - 40px);
+  margin: 0 20px 0 auto;
+  padding: 70px 0 50px;
+  text-align: right;
   position: relative;
+  box-sizing: border-box;
 }
 
 h1 {
   font-size: 96px;
   font-weight: 600;
   letter-spacing: -2px;
-  margin: 0 0 8px;
+  margin: 0 0 24px;
   line-height: 1;
   color: #24292e;
 }
@@ -127,9 +162,9 @@ a:hover {
 
 .logo {
   display: block;
-  width: 32px;
-  height: 32px;
-  margin: 32px auto 0;
+  width: 60px;
+  height: 60px;
+  margin: 32px 0 0 auto;
   cursor: pointer;
   user-select: none;
   -webkit-user-drag: none;
@@ -137,7 +172,7 @@ a:hover {
 }
 
 .logo:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .logo:active {
@@ -146,26 +181,10 @@ a:hover {
 
 .logo img {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 60px;
+  height: 60px;
   user-select: none;
   -webkit-user-drag: none;
-}
-
-.logo-img-1x {
-  display: block;
-}
-
-.logo-img-2x {
-  display: none;
-}
-
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .logo-img-1x {
-    display: none;
-  }
-  .logo-img-2x {
-    display: block;
-  }
+  pointer-events: none;
 }
 </style>
