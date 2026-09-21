@@ -1,35 +1,33 @@
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useLocalStorage } from '@vueuse/core'
 
-const DEADLINE_KEY = 'screen-lock.lock-deadline'
 const TIMEOUT_MS = 30 * 60 * 1000
 const CLICK_EXTEND_MS = 10 * 60 * 1000
 
 export const PATTERN_PASSWORD = [4, 2, 3, 5, 7, 8, 6] as const
 
-const lockDeadline = useLocalStorage<number | null>(DEADLINE_KEY, null)
+let lockDeadline: number | null = null
 const isLocked = ref(true)
 let intervalId: number | null = null
 let clickHandler: ((e: MouseEvent) => void) | null = null
 let installed = false
 
 function evaluateLockState() {
-  if (lockDeadline.value == null) {
+  if (lockDeadline == null) {
     isLocked.value = true
     return
   }
-  isLocked.value = Date.now() > lockDeadline.value
+  isLocked.value = Date.now() > lockDeadline
 }
 
 function unlock() {
-  lockDeadline.value = Date.now() + TIMEOUT_MS
+  lockDeadline = Date.now() + TIMEOUT_MS
   isLocked.value = false
 }
 
 function onPageClick() {
   if (isLocked.value) return
-  if (lockDeadline.value == null) return
-  lockDeadline.value += CLICK_EXTEND_MS
+  if (lockDeadline == null) return
+  lockDeadline += CLICK_EXTEND_MS
 }
 
 export function useScreenLock() {
