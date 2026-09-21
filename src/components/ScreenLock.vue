@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import { useScreenLock } from '../composables/useScreenLock'
-import octocatUrl from '../assets/screen-lock-octocat.png'
+import logo1x from '../assets/screen-lock-logo-1x.png'
+import logo2x from '../assets/screen-lock-logo-2x.png'
 
 const { isLocked, unlock } = useScreenLock()
 
@@ -17,13 +18,15 @@ watch(isLocked, (locked) => {
   }
 }, { immediate: true })
 
-function onOctocatDblClick() {
-  unlock()
-}
-
-function onOctocatSingleClick() {
+function onLogoClick(e: MouseEvent) {
+  e.preventDefault()
   hint.value = '再点一次'
   setTimeout(() => (hint.value = ''), 1500)
+}
+
+function onLogoDblClick(e: MouseEvent) {
+  e.preventDefault()
+  unlock()
 }
 
 onUnmounted(() => {
@@ -34,33 +37,29 @@ onUnmounted(() => {
 <template>
   <Teleport to="body">
     <div v-if="isLocked" class="screen-lock">
-      <div class="screen-lock__container">
-        <h1 class="screen-lock__404">404</h1>
-        <h2 class="screen-lock__heading">There isn't a GitHub Pages site here.</h2>
-        <p class="screen-lock__text">
-          If you're trying to publish one, read the full documentation to learn how to set up
-          GitHub Pages for your repository, organization, or user account.
+      <div class="container">
+        <h1>404</h1>
+        <p><strong>There isn't a GitHub Pages site here.</strong></p>
+        <p>
+          If you're trying to publish one,
+          <a href="https://help.github.com/pages/" target="_blank" rel="noopener noreferrer">read the full documentation</a>
+          to learn how to set up <strong>GitHub Pages</strong>
+          for your repository, organization, or user account.
         </p>
-
-        <img
-          :src="octocatUrl"
-          alt="octocat"
-          class="screen-lock__octocat"
-          @click="onOctocatSingleClick"
-          @dblclick="onOctocatDblClick"
-          draggable="false"
-        />
+        <div id="suggestions">
+          <a href="https://www.githubstatus.com/" target="_blank" rel="noopener noreferrer">GitHub Status</a>
+          —
+          <a href="https://twitter.com/githubstatus" target="_blank" rel="noopener noreferrer">@githubstatus</a>
+        </div>
 
         <p v-if="hint" class="screen-lock__hint">{{ hint }}</p>
 
-        <p class="screen-lock__footer">
-          <a
-            href="https://www.githubstatus.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >GitHub Status</a>
-          — @githubstatus
-        </p>
+        <a href="/" class="logo logo-img-1x" @click="onLogoClick" @dblclick="onLogoDblClick" draggable="false">
+          <img width="32" height="32" alt="" :src="logo1x" draggable="false" />
+        </a>
+        <a href="/" class="logo logo-img-2x" @click="onLogoClick" @dblclick="onLogoDblClick" draggable="false">
+          <img width="32" height="32" alt="" :src="logo2x" draggable="false" />
+        </a>
       </div>
     </div>
   </Teleport>
@@ -71,82 +70,102 @@ onUnmounted(() => {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fafbfc;
+  background: #fafafa;
+  color: #24292e;
   overflow-y: auto;
-  padding: 40px 20px;
 }
 
-.screen-lock__container {
-  max-width: 720px;
-  width: 100%;
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 70px 20px 50px;
   text-align: center;
+  position: relative;
 }
 
-.screen-lock__404 {
+h1 {
   font-size: 96px;
   font-weight: 600;
-  color: #24292e;
-  margin: 0 0 16px;
-  line-height: 1;
   letter-spacing: -2px;
-}
-
-.screen-lock__heading {
-  font-size: 32px;
-  font-weight: 400;
+  margin: 0 0 8px;
+  line-height: 1;
   color: #24292e;
+}
+
+p {
   margin: 0 0 16px;
-  line-height: 1.25;
-}
-
-.screen-lock__text {
-  font-size: 16px;
-  color: #586069;
-  line-height: 1.5;
-  margin: 0 0 40px;
-}
-
-.screen-lock__octocat {
-  width: 256px;
-  height: auto;
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-drag: none;
-  transition: transform 0.1s ease;
-  display: block;
-  margin: 0 auto;
-}
-
-.screen-lock__octocat:hover {
-  transform: scale(1.03);
-}
-
-.screen-lock__octocat:active {
-  transform: scale(0.97);
-}
-
-.screen-lock__hint {
-  margin-top: 16px;
-  color: #586069;
-  font-size: 13px;
-  min-height: 18px;
-}
-
-.screen-lock__footer {
-  margin-top: 40px;
   font-size: 14px;
-  color: #586069;
+  line-height: 1.5;
+  color: #24292e;
 }
 
-.screen-lock__footer a {
+p strong {
+  font-weight: 600;
+}
+
+a {
   color: #0366d6;
   text-decoration: none;
 }
 
-.screen-lock__footer a:hover {
+a:hover {
   text-decoration: underline;
+}
+
+#suggestions {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #24292e;
+}
+
+.screen-lock__hint {
+  margin-top: 12px !important;
+  font-size: 13px;
+  color: #586069;
+  min-height: 18px;
+}
+
+.logo {
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin: 32px auto 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.1s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+.logo:active {
+  transform: scale(0.95);
+}
+
+.logo img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.logo-img-1x {
+  display: block;
+}
+
+.logo-img-2x {
+  display: none;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .logo-img-1x {
+    display: none;
+  }
+  .logo-img-2x {
+    display: block;
+  }
 }
 </style>
