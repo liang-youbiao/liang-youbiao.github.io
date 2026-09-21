@@ -62,6 +62,12 @@ export const staticRoutes: RouteRecordRaw[] = [
     component: () => import('@/pages/system/execution.vue'),
   },
   {
+    path: '/execution/:kind/:slug/',
+    name: 'execution-item',
+    component: () => import('@/pages/execution-item.vue'),
+    props: true,
+  },
+  {
     path: '/learning/',
     name: 'learning',
     component: () => import('@/pages/system/learning.vue'),

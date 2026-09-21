@@ -37,7 +37,20 @@ const knowledgeNoteRoutes = generatedKnowledgeNotes.map((note) => ({
   props: { domain: note.domain, topic: note.topic, slug: note.slug },
 }))
 
+// 执行体系:训练 / 惩罚 / 奖赏 三类条目详情路由
+// 通过 import.meta.glob 直接读 src/content/execution/{kind}/*.md 拿到所有 slug
+const executionModules = import.meta.glob('./content/execution/{training,punish,reward}/*.md', { eager: true })
+const executionItemRoutes = Object.keys(executionModules).map((path) => {
+  const m = /\/(training|punish|reward)\/([^/]+)\.md$/.exec(path)
+  if (!m) return null
+  return {
+    path: `/execution/${m[1]}/${m[2]}/`,
+    component: () => import('./pages/execution-item.vue'),
+    props: { kind: m[1], slug: m[2] },
+  }
+}).filter((r): r is { path: string; component: any; props: { kind: string; slug: string } } => r !== null)
+
 export const createApp = ViteSSG(
   App,
-  { routes: [...staticRoutes, ...postRoutes, ...tagRoutes, ...knowledgeDomainRoutes, ...knowledgeNoteRoutes] },
+  { routes: [...staticRoutes, ...postRoutes, ...tagRoutes, ...knowledgeDomainRoutes, ...knowledgeNoteRoutes, ...executionItemRoutes] },
 )
