@@ -40,13 +40,3 @@ declare module 'three/examples/jsm/postprocessing/OutputPass.js' {
   const OutputPass: any
   export default OutputPass
 }
-
-declare module 'pixi.js' {
-  const PIXI: any
-  export default PIXI
-}
-
-declare module 'pixi-live2d-display' {
-  const Live2DModel: any
-  export { Live2DModel }
-}

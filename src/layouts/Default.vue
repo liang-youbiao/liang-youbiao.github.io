@@ -89,14 +89,7 @@ watch(() => route.path, () => { closeMenu() })
     </footer>
 
     <ProgressBar />
-    <KanbanGirl
-      model-path="/kanban/epsilon2.1/Epsilon2.1.model.json"
-      position="left"
-    />
-    <KanbanGirl
-      model-path="/kanban/shizuku/shizuku.model.json"
-      position="right"
-    />
+    <KanbanGirl />
   </div>
 </template>
 
