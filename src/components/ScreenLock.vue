@@ -129,7 +129,6 @@ h1 {
 p {
   margin: 20px 0;
   line-height: 1.6;
-  font-size: 14px;
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -175,5 +174,11 @@ a:hover {
   height: 32px;
   user-select: none;
   -webkit-user-drag: none;
+}
+
+:global(html body) {
+  background-color: #f1f1f1;
+  margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 </style>
