@@ -86,7 +86,7 @@ onUnmounted(() => {
           @dblclick="onLogoDblClick"
           draggable="false"
         >
-          <img width="60" height="60" alt="" src="/screen-lock-logo.png" draggable="false" />
+          <img width="32" height="32" alt="" src="/screen-lock-logo.png" draggable="false" />
         </a>
       </div>
     </div>
@@ -98,7 +98,7 @@ onUnmounted(() => {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: #fafafa;
+  background: #f1f1f1;
   color: #24292e;
   overflow-y: auto;
 }
@@ -114,19 +114,23 @@ onUnmounted(() => {
 }
 
 h1 {
-  font-size: 96px;
-  font-weight: 600;
-  letter-spacing: -2px;
-  margin: 0 0 24px;
-  line-height: 1;
+  width: 800px;
+  position: relative;
+  left: -100px;
+  letter-spacing: -1px;
+  line-height: 60px;
+  font-size: 60px;
+  font-weight: 100;
+  margin: 0 0 50px 0;
+  text-shadow: 0 1px 0 #fff;
   color: #24292e;
 }
 
 p {
-  margin: 0 0 16px;
+  margin: 20px 0;
+  line-height: 1.6;
   font-size: 14px;
-  line-height: 1.5;
-  color: #24292e;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 p strong {
@@ -148,31 +152,28 @@ a:hover {
   color: #24292e;
 }
 
+#suggestions a {
+  color: #666666;
+  font-weight: 200;
+  font-size: 14px;
+  margin: 0 10px;
+}
+
 .logo {
   display: block;
-  width: 60px;
-  height: 60px;
+  width: 32px;
+  height: 32px;
   margin: 32px auto 0;
   cursor: pointer;
   user-select: none;
   -webkit-user-drag: none;
-  transition: transform 0.1s ease;
-}
-
-.logo:hover {
-  transform: scale(1.08);
-}
-
-.logo:active {
-  transform: scale(0.95);
 }
 
 .logo img {
   display: block;
-  width: 60px;
-  height: 60px;
+  width: 32px;
+  height: 32px;
   user-select: none;
   -webkit-user-drag: none;
-  pointer-events: none;
 }
 </style>
