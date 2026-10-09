@@ -34,14 +34,22 @@ function restoreOriginalChrome() {
   })
 }
 
+// live2d-widget 异步 import,容器在所有同步 mount 之后才 appendChild 到 body,
+// 用 CSS class 屏蔽而不是 JS 查 DOM,避免时序竞态。
+function setLive2dHidden(hidden: boolean) {
+  document.documentElement.classList.toggle('screen-lock-active', hidden)
+}
+
 watch(isLocked, (locked) => {
   if (locked) {
     prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     applyLockedChrome()
+    setLive2dHidden(true)
   } else {
     document.body.style.overflow = prevOverflow
     restoreOriginalChrome()
+    setLive2dHidden(false)
   }
 }, { immediate: true })
 
@@ -114,9 +122,6 @@ onUnmounted(() => {
 }
 
 h1 {
-  width: 800px;
-  position: relative;
-  left: -100px;
   letter-spacing: -1px;
   line-height: 60px;
   font-size: 60px;
@@ -174,6 +179,13 @@ a:hover {
   height: 32px;
   user-select: none;
   -webkit-user-drag: none;
+}
+
+/* live2d-widget 的容器写死 inline z-index:99999,普通 z-index 盖不住,
+   display 不是 inline 属性,这里直接置 none 即可。
+   整个选择器都要包在 :global() 里,否则 scoped 会给它追加 data-v 属性。 */
+:global(html.screen-lock-active .live2d-widget-container) {
+  display: none !important;
 }
 
 :global(html body) {
